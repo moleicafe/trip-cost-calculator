@@ -22,14 +22,14 @@ class DirectionsParsingTest {
 
     @Test
     fun `sums legs of first route and converts meters to km`() {
-        val result = DirectionsClient.extractDistanceKm(response("OK", 15_000, 6_000))
+        val result = DirectionsClient.extractDistanceKm(response("OK", 15_000L, 6_000L))
         assertTrue(result is DistanceLookupResult.Success)
         assertEquals(21.0, (result as DistanceLookupResult.Success).distanceKm, 1e-9)
     }
 
     @Test
     fun `single leg road distance`() {
-        val result = DirectionsClient.extractDistanceKm(response("OK", 21_337))
+        val result = DirectionsClient.extractDistanceKm(response("OK", 21_337L))
         assertEquals(21.337, (result as DistanceLookupResult.Success).distanceKm, 1e-9)
     }
 

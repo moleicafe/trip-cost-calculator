@@ -28,7 +28,7 @@ sealed interface DistanceLookupResult {
     data class Failure(val message: String) : DistanceLookupResult
 }
 
-private interface DirectionsApi {
+internal interface DirectionsApi {
     @GET("maps/api/directions/json")
     suspend fun directions(
         @Query("origin") origin: String,
