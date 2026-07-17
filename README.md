@@ -8,10 +8,11 @@ litres: set up your vehicle once (consumption, tank size, what a full tank costs
 a live cost read-out for every trip as you type. Distance can be entered manually or looked
 up as true road distance between two addresses via the Google Maps Directions API.
 
-> 🚧 **Status:** Core flow complete; builds clean and all 10 unit tests pass, including
-> the calculation-engine acceptance case. Not yet verified end-to-end on a device; planned
-> extras (EV support, CSV export, spend charts, CO₂-based entry, km/L display) are gated
-> on that verification.
+> ✅ **Status:** Core flow verified end-to-end on a physical device — vehicle setup,
+> Directions-API distance lookup, live calculation, trip history, and month totals all
+> working (see screenshots). All 10 unit tests pass, including the calculation-engine
+> acceptance case. Next up: electric-vehicle support, then CSV export, spend charts,
+> CO₂-based entry, and km/L display.
 
 ## Features
 
@@ -28,7 +29,11 @@ up as true road distance between two addresses via the Google Maps Directions AP
 
 ## Screenshots
 
-*Screenshots coming soon.*
+Running on a physical device (Singapore trips, per-litre pricing, eco mode):
+
+| New Trip | Live result + Directions lookup | Trip History |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/new-trip.jpg" width="260" alt="New Trip screen with vehicle dropdown and Normal/Eco toggle"> | <img src="docs/screenshots/new-trip-live-result.jpg" width="260" alt="Live result card showing rate, price per litre, fuel used and trip cost for a Directions-API distance"> | <img src="docs/screenshots/trip-history.jpg" width="260" alt="Trip history with running month total"> |
 
 ## Tech stack
 
