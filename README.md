@@ -79,12 +79,17 @@ gradlew :app:testDebugUnitTest
 
 ## Architecture
 
+Kotlin Multiplatform: all logic is shared; each platform brings only its UI.
+
 ```
-domain/FuelCalculator.kt   pure Kotlin — all five formulas, no Android deps (unit-tested)
-data/                      Room (Vehicle, Trip), DataStore settings, Retrofit Directions client
-ui/<feature>/              one ViewModel (StateFlow, live recombination) + screen per feature
-MainActivity.kt            NavHost + bottom navigation (New Trip · History · Vehicles · Settings)
+shared/    KMP module (Android + iOS targets) — the single source of truth
+  domain/    FuelCalculator (all five formulas) + display rounding, pure Kotlin
+  data/      Room 2.7 KMP (Vehicle, Trip), DataStore settings, Ktor Directions client
+app/       Android UI — Jetpack Compose, one ViewModel per screen, bottom navigation
+iosApp/    iOS UI — SwiftUI (in progress; see docs/ios/PHASE-B-HANDOFF.md)
 ```
+
+CI runs the shared test suite on both an Android JVM and an iOS simulator target.
 
 ## License
 
