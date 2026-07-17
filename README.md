@@ -8,9 +8,10 @@ litres: set up your vehicle once (consumption, tank size, what a full tank costs
 a live cost read-out for every trip as you type. Distance can be entered manually or looked
 up as true road distance between two addresses via the Google Maps Directions API.
 
-> 🚧 **Status:** Core flow complete with a unit-tested calculation engine. Not yet
-> verified end-to-end on a device; planned extras (CSV export, spend charts, CO₂-based
-> entry, km/L display) are deliberately gated on that verification.
+> 🚧 **Status:** Core flow complete; builds clean and all 10 unit tests pass, including
+> the calculation-engine acceptance case. Not yet verified end-to-end on a device; planned
+> extras (EV support, CSV export, spend charts, CO₂-based entry, km/L display) are gated
+> on that verification.
 
 ## Features
 
@@ -52,11 +53,8 @@ Calculations keep full double precision; rounding (2 dp, HALF_UP) happens only a
 API 26+.
 
 1. Clone and open the project folder in Android Studio.
-2. The Gradle wrapper **jar** is intentionally not committed. Let Android Studio configure
-   Gradle when it prompts, or run `gradle wrapper --gradle-version 8.9` once from any local
-   Gradle install (`gradle/wrapper/gradle-wrapper.properties` already pins 8.9).
-3. Sync and run the `app` configuration.
-4. *(Optional)* For address-to-address distance, create a Google Cloud API key with the
+2. Sync (the Gradle wrapper pins 8.9) and run the `app` configuration.
+3. *(Optional)* For address-to-address distance, create a Google Cloud API key with the
    **Directions API** enabled and paste it into the app's **Settings** screen. The key is
    stored on-device in DataStore — it never appears in source or leaves the device except
    to call Google's API.
