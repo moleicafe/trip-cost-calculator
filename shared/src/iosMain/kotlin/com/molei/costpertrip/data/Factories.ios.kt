@@ -15,6 +15,7 @@ fun createSettingsRepository(): SettingsRepository =
         createPreferencesDataStore { documentDirectory() + "/settings.preferences_pb" }
     )
 
+@OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 private fun documentDirectory(): String {
     val documentDirectory = NSFileManager.defaultManager.URLForDirectory(
         directory = NSDocumentDirectory,

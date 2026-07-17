@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 
 @Database(entities = [Vehicle::class, Trip::class], version = 1, exportSchema = false)
 @TypeConverters(EnumConverters::class)
@@ -22,8 +22,11 @@ expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
     override fun initialize(): AppDatabase
 }
 
+// Dispatchers.IO is JVM/native platform API, not visible from common code.
+internal expect val ioDispatcher: CoroutineDispatcher
+
 internal fun buildAppDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase =
     builder
         .setDriver(BundledSQLiteDriver())
-        .setQueryCoroutineContext(Dispatchers.IO)
+        .setQueryCoroutineContext(ioDispatcher)
         .build()
