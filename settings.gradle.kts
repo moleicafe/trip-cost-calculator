@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "CostPerTrip"
 include(":app")
+include(":shared")
