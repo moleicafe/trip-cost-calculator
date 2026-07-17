@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.molei.costpertrip.data.Vehicle
 import com.molei.costpertrip.domain.FuelPriceMode
-import com.molei.costpertrip.ui.display2dp
+import com.molei.costpertrip.domain.display2dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

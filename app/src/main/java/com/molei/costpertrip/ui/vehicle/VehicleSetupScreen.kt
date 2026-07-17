@@ -35,7 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.molei.costpertrip.domain.FuelPriceMode
-import com.molei.costpertrip.ui.display2dp
+import com.molei.costpertrip.domain.display2dp
 import java.math.BigDecimal
 import java.math.RoundingMode
 

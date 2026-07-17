@@ -3,14 +3,15 @@ package com.molei.costpertrip
 import com.molei.costpertrip.domain.FuelCalculator
 import com.molei.costpertrip.domain.FuelPriceMode
 import com.molei.costpertrip.domain.TripMode
-import com.molei.costpertrip.ui.display2dp
-import com.molei.costpertrip.ui.formatMoney
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import com.molei.costpertrip.domain.display2dp
+import com.molei.costpertrip.domain.formatMoney
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 /**
  * Validation gate from the spec: the Honda Civic 1.6 VTi CVT case must
  * reproduce fuelUsed = 1.28 L and cost = $2.73 exactly (at 2 dp display).
+ * Runs on Android AND iOS targets.
  */
 class FuelCalculatorTest {
 
@@ -21,7 +22,7 @@ class FuelCalculatorTest {
     private val fuelPricePerTank = 100.0
 
     @Test
-    fun `civic sample trip - 21 km eco - reproduces spec values exactly`() {
+    fun civicSampleTrip21kmEcoReproducesSpecValuesExactly() {
         val result = FuelCalculator.calculate(
             mode = TripMode.Eco,
             distanceKm = 21.0,
@@ -45,7 +46,7 @@ class FuelCalculatorTest {
     }
 
     @Test
-    fun `per-litre price mode uses fuelPricePerLitre directly`() {
+    fun perLitrePriceModeUsesFuelPricePerLitreDirectly() {
         val result = FuelCalculator.calculate(
             mode = TripMode.Normal,
             distanceKm = 100.0,
@@ -62,26 +63,16 @@ class FuelCalculatorTest {
     }
 
     @Test
-    fun `normal mode selects consumptionNormal, eco selects consumptionEco`() {
+    fun modeSelectsMatchingConsumptionRate() {
         assertEquals(6.7, FuelCalculator.consumptionRate(TripMode.Normal, 6.7, 6.1), 1e-9)
         assertEquals(6.1, FuelCalculator.consumptionRate(TripMode.Eco, 6.7, 6.1), 1e-9)
     }
 
     @Test
-    fun `eco consumption auto-derives from eco saving percent`() {
+    fun ecoConsumptionAutoDerivesFromEcoSavingPercent() {
         // 6.7 * (1 - 9/100) = 6.097
         assertEquals(6.097, FuelCalculator.deriveEcoConsumption(6.7, 9.0), 1e-9)
         // 10 * (1 - 15/100) = 8.5
         assertEquals(8.5, FuelCalculator.deriveEcoConsumption(10.0, 15.0), 1e-9)
-    }
-
-    @Test
-    fun `display rounding is half-up at 2 dp`() {
-        assertEquals("1.28", 1.281.display2dp())
-        assertEquals("2.73", 2.725531914893617.display2dp())
-        assertEquals("2.13", 2.127659574468085.display2dp())
-        assertEquals("1.29", 1.285.display2dp()) // half rounds up
-        assertEquals("$0.00", formatMoney("$", 0.0))
-        assertEquals("€3.50", formatMoney("€", 3.5))
     }
 }

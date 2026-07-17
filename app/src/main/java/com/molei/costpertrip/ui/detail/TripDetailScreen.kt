@@ -28,8 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.molei.costpertrip.data.DistanceSource
-import com.molei.costpertrip.ui.display2dp
-import com.molei.costpertrip.ui.formatMoney
+import com.molei.costpertrip.domain.display2dp
+import com.molei.costpertrip.domain.formatMoney
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -91,8 +91,10 @@ fun TripDetailScreen(
                             DistanceSource.DirectionsAPI -> "Google Directions API"
                         },
                     )
-                    if (!trip.startLocation.isNullOrBlank()) DetailRow("From", trip.startLocation)
-                    if (!trip.endLocation.isNullOrBlank()) DetailRow("To", trip.endLocation)
+                    val from = trip.startLocation
+                    val to = trip.endLocation
+                    if (!from.isNullOrBlank()) DetailRow("From", from)
+                    if (!to.isNullOrBlank()) DetailRow("To", to)
                 }
             }
 

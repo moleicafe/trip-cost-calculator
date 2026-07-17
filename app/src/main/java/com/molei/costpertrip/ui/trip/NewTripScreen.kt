@@ -47,8 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.molei.costpertrip.data.DistanceSource
 import com.molei.costpertrip.domain.TripMode
-import com.molei.costpertrip.ui.display2dp
-import com.molei.costpertrip.ui.formatMoney
+import com.molei.costpertrip.domain.display2dp
+import com.molei.costpertrip.domain.formatMoney
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

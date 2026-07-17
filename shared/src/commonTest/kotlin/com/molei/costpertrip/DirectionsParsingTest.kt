@@ -6,9 +6,10 @@ import com.molei.costpertrip.data.DirectionsLeg
 import com.molei.costpertrip.data.DirectionsResponse
 import com.molei.costpertrip.data.DirectionsRoute
 import com.molei.costpertrip.data.DistanceLookupResult
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 class DirectionsParsingTest {
 
@@ -21,37 +22,38 @@ class DirectionsParsingTest {
     )
 
     @Test
-    fun `sums legs of first route and converts meters to km`() {
+    fun sumsLegsOfFirstRouteAndConvertsMetersToKm() {
         val result = DirectionsClient.extractDistanceKm(response("OK", 15_000L, 6_000L))
-        assertTrue(result is DistanceLookupResult.Success)
-        assertEquals(21.0, (result as DistanceLookupResult.Success).distanceKm, 1e-9)
+        assertIs<DistanceLookupResult.Success>(result)
+        assertEquals(21.0, result.distanceKm, 1e-9)
     }
 
     @Test
-    fun `single leg road distance`() {
+    fun singleLegRoadDistance() {
         val result = DirectionsClient.extractDistanceKm(response("OK", 21_337L))
-        assertEquals(21.337, (result as DistanceLookupResult.Success).distanceKm, 1e-9)
+        assertIs<DistanceLookupResult.Success>(result)
+        assertEquals(21.337, result.distanceKm, 1e-9)
     }
 
     @Test
-    fun `zero results is a readable failure, not a crash`() {
+    fun zeroResultsIsAReadableFailureNotACrash() {
         val result = DirectionsClient.extractDistanceKm(response("ZERO_RESULTS"))
-        assertTrue(result is DistanceLookupResult.Failure)
-        assertTrue((result as DistanceLookupResult.Failure).message.contains("route", ignoreCase = true))
+        assertIs<DistanceLookupResult.Failure>(result)
+        assertTrue(result.message.contains("route", ignoreCase = true))
     }
 
     @Test
-    fun `request denied surfaces API error`() {
+    fun requestDeniedSurfacesApiError() {
         val result = DirectionsClient.extractDistanceKm(
             DirectionsResponse(status = "REQUEST_DENIED", routes = emptyList(), errorMessage = "The provided API key is invalid.")
         )
-        assertTrue(result is DistanceLookupResult.Failure)
-        assertTrue((result as DistanceLookupResult.Failure).message.contains("invalid", ignoreCase = true))
+        assertIs<DistanceLookupResult.Failure>(result)
+        assertTrue(result.message.contains("invalid", ignoreCase = true))
     }
 
     @Test
-    fun `ok status with empty routes is a failure`() {
+    fun okStatusWithEmptyRoutesIsAFailure() {
         val result = DirectionsClient.extractDistanceKm(response("OK"))
-        assertTrue(result is DistanceLookupResult.Failure)
+        assertIs<DistanceLookupResult.Failure>(result)
     }
 }

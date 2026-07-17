@@ -21,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.molei.costpertrip.ui.display2dp
-import com.molei.costpertrip.ui.formatMoney
+import com.molei.costpertrip.domain.display2dp
+import com.molei.costpertrip.domain.formatMoney
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

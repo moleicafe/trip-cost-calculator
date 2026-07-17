@@ -1,40 +1,39 @@
 package com.molei.costpertrip.data
 
-import com.google.gson.annotations.SerializedName
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 // --- DTOs for the Google Maps Directions API JSON response ---
 
+@Serializable
 data class DirectionsResponse(
-    val status: String?,
-    val routes: List<DirectionsRoute>?,
-    @SerializedName("error_message") val errorMessage: String?,
+    val status: String? = null,
+    val routes: List<DirectionsRoute>? = null,
+    @SerialName("error_message") val errorMessage: String? = null,
 )
 
-data class DirectionsRoute(val legs: List<DirectionsLeg>?)
+@Serializable
+data class DirectionsRoute(val legs: List<DirectionsLeg>? = null)
 
-data class DirectionsLeg(val distance: DirectionsDistance?)
+@Serializable
+data class DirectionsLeg(val distance: DirectionsDistance? = null)
 
+@Serializable
 data class DirectionsDistance(
     /** Distance in meters. */
-    val value: Long?,
+    val value: Long? = null,
 )
 
 sealed interface DistanceLookupResult {
     data class Success(val distanceKm: Double) : DistanceLookupResult
     data class Failure(val message: String) : DistanceLookupResult
-}
-
-internal interface DirectionsApi {
-    @GET("maps/api/directions/json")
-    suspend fun directions(
-        @Query("origin") origin: String,
-        @Query("destination") destination: String,
-        @Query("key") key: String,
-    ): DirectionsResponse
 }
 
 /**
@@ -44,20 +43,25 @@ internal interface DirectionsApi {
  */
 object DirectionsClient {
 
-    private val api: DirectionsApi by lazy {
-        Retrofit.Builder()
-            .baseUrl("https://maps.googleapis.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(DirectionsApi::class.java)
+    private val http: HttpClient by lazy {
+        HttpClient {
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+        }
     }
 
     suspend fun lookupDistanceKm(origin: String, destination: String, apiKey: String): DistanceLookupResult {
         if (apiKey.isBlank()) return DistanceLookupResult.Failure("No API key configured in Settings.")
         return try {
-            extractDistanceKm(api.directions(origin, destination, apiKey))
+            val response: DirectionsResponse = http.get("https://maps.googleapis.com/maps/api/directions/json") {
+                parameter("origin", origin)
+                parameter("destination", destination)
+                parameter("key", apiKey)
+            }.body()
+            extractDistanceKm(response)
         } catch (e: Exception) {
-            DistanceLookupResult.Failure("Network error: ${e.message ?: e.javaClass.simpleName}")
+            DistanceLookupResult.Failure("Network error: ${e.message ?: e::class.simpleName ?: "unknown"}")
         }
     }
 
