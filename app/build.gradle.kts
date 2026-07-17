@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.molei.fuelcost"
+    namespace = "com.molei.costpertrip"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.molei.fuelcost"
+        applicationId = "com.molei.costpertrip"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

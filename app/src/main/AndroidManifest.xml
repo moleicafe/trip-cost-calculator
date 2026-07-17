@@ -4,12 +4,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".FuelCostApp"
+        android:name=".CostPerTripApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FuelCost">
+        android:theme="@style/Theme.CostPerTrip">
         <activity
             android:name=".MainActivity"
             android:exported="true">
