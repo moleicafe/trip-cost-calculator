@@ -1,4 +1,4 @@
-# Fuel Cost Calculator
+# Cost Per Trip
 
 [![CI](https://github.com/moleicafe/trip-cost-calculator/actions/workflows/ci.yml/badge.svg)](https://github.com/moleicafe/trip-cost-calculator/actions/workflows/ci.yml)
 
