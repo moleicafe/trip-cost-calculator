@@ -1,17 +1,40 @@
 # Fuel Cost Calculator
 
-Native Android app (Kotlin, Jetpack Compose, Material 3) that calculates fuel cost per trip
-from a vehicle's consumption rate, trip distance, and fuel price.
+**A native Android app that tells you what any car trip actually costs in fuel — from your
+vehicle's real consumption rate, the trip distance, and what you pay at the pump.**
 
-- **Vehicle profiles** — consumption (normal + eco, with auto-derive from an eco-saving %),
-  tank capacity, fuel price entered per full tank or per litre, per-vehicle currency symbol.
-- **New Trip** — pick a vehicle (defaults to last used), enter distance manually or look up
-  road distance between two addresses via the Google Maps Directions API, toggle Normal/Eco.
-  The result card (rate used, price/L, fuel used, cost) recomputes live as you type.
-- **Trip History** — newest first, with a running total for the current month.
-- **Trip Detail** — full breakdown showing the formulas with the trip's numbers substituted.
+Built for everyday drivers who think in "how much did that trip cost me?" rather than
+litres: set up your vehicle once (consumption, tank size, what a full tank costs), then get
+a live cost read-out for every trip as you type. Distance can be entered manually or looked
+up as true road distance between two addresses via the Google Maps Directions API.
 
-## Formulas (from the spec, used exactly)
+> 🚧 **Status:** Core flow complete with a unit-tested calculation engine. Not yet
+> verified end-to-end on a device; planned extras (CSV export, spend charts, CO₂-based
+> entry, km/L display) are deliberately gated on that verification.
+
+## Features
+
+- **Per-trip cost, live** — the result card (rate used, price/L, litres, cost) recomputes
+  on every keystroke, not on submit.
+- **Vehicle profiles** — normal + eco consumption (eco can auto-derive from a configurable
+  saving %), tank capacity, fuel price per full tank *or* per litre, per-vehicle currency.
+- **Real road distance** — optional address-to-address lookup via the Google Directions
+  API. No key? Entry stays manual: the app refuses to substitute straight-line estimates,
+  which under-read road distance by ~7% in testing.
+- **Trip history** — newest first with a running total for the current month.
+- **Trip detail** — every formula shown with the trip's actual numbers substituted, so the
+  arithmetic is auditable.
+
+## Screenshots
+
+*Screenshots coming soon.*
+
+## Tech stack
+
+Kotlin · Jetpack Compose (Material 3) · Room · DataStore · Retrofit · ViewModel + StateFlow
+· Navigation Compose · JUnit
+
+## The formulas
 
 | # | Value | Formula |
 |---|-------|---------|
@@ -23,34 +46,31 @@ from a vehicle's consumption rate, trip distance, and fuel price.
 
 Calculations keep full double precision; rounding (2 dp, HALF_UP) happens only at display.
 
-## Building
+## Getting started
 
-1. Open the project folder in **Android Studio** (Ladybug or newer; JDK 17).
-2. The Gradle wrapper **jar** is intentionally not committed. Either let Android Studio
-   configure Gradle when it prompts, or run `gradle wrapper --gradle-version 8.9` once from
-   any local Gradle install. `gradle/wrapper/gradle-wrapper.properties` already pins 8.9.
-3. Sync and run the `app` configuration (minSdk 26).
+**Prerequisites:** Android Studio (Ladybug or newer), JDK 17, an Android device/emulator on
+API 26+.
 
-## Validation gate (run before trusting the numbers)
+1. Clone and open the project folder in Android Studio.
+2. The Gradle wrapper **jar** is intentionally not committed. Let Android Studio configure
+   Gradle when it prompts, or run `gradle wrapper --gradle-version 8.9` once from any local
+   Gradle install (`gradle/wrapper/gradle-wrapper.properties` already pins 8.9).
+3. Sync and run the `app` configuration.
+4. *(Optional)* For address-to-address distance, create a Google Cloud API key with the
+   **Directions API** enabled and paste it into the app's **Settings** screen. The key is
+   stored on-device in DataStore — it never appears in source or leaves the device except
+   to call Google's API.
+
+## Validation gate
 
 ```
 gradlew :app:testDebugUnitTest
 ```
 
-`FuelCalculatorTest` reproduces the spec's acceptance case — Honda Civic 1.6 VTi CVT
+`FuelCalculatorTest` reproduces the acceptance case — Honda Civic 1.6 VTi CVT
 (6.7 / 6.1 L/100km, 47 L tank, $100 per tank), 21 km trip in eco mode — and requires
 **1.28 L** fuel used and **$2.73** cost exactly at display precision (price/L = $2.13).
 `DirectionsParsingTest` covers the Directions API response parsing.
-
-## Distance lookup and the API key
-
-Address-to-address distance uses the **Google Maps Directions API** (road distance, sum of
-the first route's legs). Supply your own key in **Settings** — it is stored on-device in
-DataStore and never hardcoded in source or sent anywhere except Google's API.
-
-Without a key, distance entry is **manual only**. The app deliberately has **no
-straight-line/haversine fallback**: it under-estimates road distance meaningfully (a tested
-Yishun → Jalan Sedap case came out ~7% short: 19.5 km estimated vs 21 km actual road distance).
 
 ## Architecture
 
@@ -61,7 +81,6 @@ ui/<feature>/              one ViewModel (StateFlow, live recombination) + scree
 MainActivity.kt            NavHost + bottom navigation (New Trip · History · Vehicles · Settings)
 ```
 
-## Deliberately not built yet
+## License
 
-The spec gates nice-to-haves (CO₂-based entry, CSV export, spend charts, km/L display,
-multi-vehicle comparison) on the core flow being verified end-to-end on a device first.
+[MIT](LICENSE)
