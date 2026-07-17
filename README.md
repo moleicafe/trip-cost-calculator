@@ -1,5 +1,7 @@
 # Fuel Cost Calculator
 
+[![CI](https://github.com/moleicafe/trip-cost-calculator/actions/workflows/ci.yml/badge.svg)](https://github.com/moleicafe/trip-cost-calculator/actions/workflows/ci.yml)
+
 **A native Android app that tells you what any car trip actually costs in fuel — from your
 vehicle's real consumption rate, the trip distance, and what you pay at the pump.**
 
